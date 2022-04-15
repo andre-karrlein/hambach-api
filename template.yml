@@ -1,0 +1,65 @@
+AWSTemplateFormatVersion: "2010-09-09"
+Description: "hambach API."
+Transform: "AWS::Serverless-2016-10-31"
+
+
+Parameters:
+  VaultToken:
+    Type: "String"
+
+AWSTemplateFormatVersion: "2010-09-09"
+Description: "hambach API project."
+Transform: "AWS::Serverless-2016-10-31"
+
+Parameters:
+  VaultToken:
+    Type: "String"
+    Default: "default"
+  READKEY:
+    Type: "String"
+  WRITEKEY:
+    Type: "String"
+
+Globals:
+  Function:
+    Handler: "main"
+    Timeout: 10
+    Runtime: "go1.x"
+
+
+Resources:
+
+  content:
+    Type: "AWS::Serverless::Function"
+    Properties:
+      CodeUri: "cmd/content"
+      Environment:
+        Variables:
+          READ_KEY: !Ref READKEY
+      Events:
+        ApiEvent:
+          Type: "HttpApi"
+        Api:
+          Type: "Api"
+          Properties:
+            Path: "/api/v1/content"
+            Method: "get"
+        ApiParam:
+          Type: "Api"
+          Properties:
+            Path: "/api/v1/content/{id}"
+            Method: "get"
+
+  contentPut:
+    Type: "AWS::Serverless::Function"
+    Properties:
+      CodeUri: "cmd/contentPut"
+      Environment:
+        Variables:
+          WRITE_KEY: !Ref WRITEKEY
+      Events:
+        Api:
+          Type: "Api"
+          Properties:
+            Path: "/api/v1/content"
+            Method: "put"
