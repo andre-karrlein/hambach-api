@@ -22,4 +22,4 @@ jobs:
       # Build using SAM
       - run: sam build
       # Deploy on AWS
-      - run: sam deploy --no-confirm-changeset --no-fail-on-empty-changeset --config-file samconfig.toml  --parameter-overrides "VaultToken=default READKEY=${{ secrets.READ_KEY }} APPKEY=${{ secrets.WRITE_KEY }}"
+      - run: sam deploy --no-confirm-changeset --no-fail-on-empty-changeset --config-file samconfig.toml  --parameter-overrides "VaultToken=default READKEY=${{ secrets.READ_KEY }} WRITEKEY=${{ secrets.WRITE_KEY }}"
