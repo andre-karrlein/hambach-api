@@ -16,6 +16,7 @@ import (
 	"github.com/aws/aws-sdk-go/aws/session"
 	"github.com/aws/aws-sdk-go/service/dynamodb"
 	"github.com/aws/aws-sdk-go/service/dynamodb/dynamodbattribute"
+	"github.com/aws/aws-sdk-go/service/dynamodb/expression"
 
 	"github.com/andre-karrlein/hambach-api/model"
 	"github.com/andre-karrlein/hambach-api/util"
@@ -117,13 +118,18 @@ func getSpecificContent(handler lambdaHandler, id string) model.Content {
 	// Create DynamoDB client
 	svc := dynamodb.New(sess)
 
-	out, err := svc.GetItem(&dynamodb.GetItemInput{
-		TableName: aws.String("hambach.content"),
-		Key: map[string]*dynamodb.AttributeValue{
-			"id": {
-				S: aws.String(id),
-			},
-		},
+	expr, err := expression.NewBuilder().WithFilter(
+		expression.Equal(expression.Name("id"), expression.Value(id)),
+	).Build()
+	if err != nil {
+		panic(err)
+	}
+
+	out, err := svc.Scan(&dynamodb.ScanInput{
+		TableName:                 aws.String("hambach.content"),
+		FilterExpression:          expr.Filter(),
+		ExpressionAttributeNames:  expr.Names(),
+		ExpressionAttributeValues: expr.Values(),
 	})
 
 	if err != nil {
@@ -132,7 +138,7 @@ func getSpecificContent(handler lambdaHandler, id string) model.Content {
 
 	content := model.Content{}
 
-	err = dynamodbattribute.UnmarshalMap(out.Item, &content)
+	err = dynamodbattribute.UnmarshalMap(out.Items[0], &content)
 	if err != nil {
 		panic(fmt.Sprintf("Failed to unmarshal Record, %v", err))
 	}
