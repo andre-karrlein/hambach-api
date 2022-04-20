@@ -63,3 +63,31 @@ Resources:
           Properties:
             Path: "/api/v1/content"
             Method: "put"
+
+  files:
+    Type: "AWS::Serverless::Function"
+    Properties:
+      CodeUri: "cmd/files"
+      Environment:
+        Variables:
+          READ_KEY: !Ref READKEY
+      Events:
+        Api:
+          Type: "Api"
+          Properties:
+            Path: "/api/v1/files"
+            Method: "get"
+      
+  filePost:
+    Type: "AWS::Serverless::Function"
+    Properties:
+      CodeUri: "cmd/filePost"
+      Environment:
+        Variables:
+          WRITE_KEY: !Ref WRITEKEY
+      Events:
+        Api:
+          Type: "Api"
+          Properties:
+            Path: "/api/v1/files"
+            Method: "post"
