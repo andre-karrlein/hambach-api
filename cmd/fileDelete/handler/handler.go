@@ -2,7 +2,6 @@ package handler
 
 import (
 	"context"
-	"encoding/base64"
 	"encoding/json"
 	"errors"
 	"log"
@@ -13,14 +12,14 @@ import (
 	"github.com/aws/aws-lambda-go/lambda"
 	"github.com/aws/aws-sdk-go/aws"
 	"github.com/aws/aws-sdk-go/aws/session"
-	"github.com/aws/aws-sdk-go/service/s3/s3manager"
+	"github.com/aws/aws-sdk-go/service/s3"
 
 	"github.com/andre-karrlein/hambach-api/model"
 	"github.com/andre-karrlein/hambach-api/util"
 )
 
-// ErrNoContent indicates that API failed in some way
-var ErrNoContent = errors.New("failed to get Content")
+// ErrNoFiles indicates that API failed in some way
+var ErrNoFiles = errors.New("failed to get files")
 
 type lambdaHandler struct {
 	customString string
@@ -49,11 +48,13 @@ func (handler lambdaHandler) Handle(ctx context.Context, request *events.APIGate
 		return response, nil
 	}
 
-	f := model.UploadedFile{}
+	id, ok := request.PathParameters["id"]
+	if !ok {
+		handler.logger.Println("No id given.")
+		response.StatusCode = http.StatusBadGateway
+	}
 
-	json.Unmarshal([]byte(request.Body), &f)
-
-	err = saveFile(handler, f)
+	err = deleteFile(handler, id)
 	if err != nil {
 		response.StatusCode = http.StatusBadGateway
 		response.Body = string("Error creating or updating post")
@@ -66,55 +67,53 @@ func (handler lambdaHandler) Handle(ctx context.Context, request *events.APIGate
 		return response, nil
 	}
 
-	response.StatusCode = http.StatusCreated
+	response.StatusCode = http.StatusAccepted
 	response.Body = string(data)
 	response.Headers = map[string]string{"Access-Control-Allow-Origin": "*"}
 
 	return response, nil
 }
 
-func saveFile(handler lambdaHandler, file model.UploadedFile) error {
+func deleteFile(handler lambdaHandler, id string) error {
 	sess := session.Must(session.NewSessionWithOptions(session.Options{
 		SharedConfigState: session.SharedConfigEnable,
 	}))
 
-	uploader := s3manager.NewUploader(sess)
+	// Create S3 service client
+	svc := s3.New(sess)
+	file := getFileById(handler, svc, id)
+	key := file.Key
 
-	parseData(file)
-	fileData, err := os.Open(file.Name)
+	_, err := svc.DeleteObject(&s3.DeleteObjectInput{Bucket: aws.String("hambach"), Key: aws.String(key)})
 	if err != nil {
-		log.Fatalf("Unable to open file %q, %v", file.Name, err)
+		log.Fatalf("Unable to delete object %q from bucket hambach, %v", key, err)
 	}
 
-	_, err = uploader.Upload(&s3manager.UploadInput{
+	err = svc.WaitUntilObjectNotExists(&s3.HeadObjectInput{
 		Bucket: aws.String("hambach"),
-		Key:    aws.String(file.Name),
-		Body:   fileData,
+		Key:    aws.String(key),
 	})
-	if err != nil {
-		// Print the error and exit.
-		log.Fatalf("Unable to upload %q to hambach, %v", file.Name, err)
-	}
 
 	return nil
 }
 
-func parseData(file model.UploadedFile) {
-	dec, err := base64.StdEncoding.DecodeString(file.Data)
+func getFileById(handler lambdaHandler, svc *s3.S3, id string) model.File {
+
+	resp, err := svc.ListObjectsV2(&s3.ListObjectsV2Input{Bucket: aws.String("hambach")})
 	if err != nil {
 		log.Fatalln(err)
 	}
 
-	f, err := os.Create(file.Name)
-	if err != nil {
-		log.Fatalln(err)
+	var file model.File
+	for _, item := range resp.Contents {
+		if *item.ETag == id {
+			file = model.File{
+				ID:           *item.ETag,
+				Key:          *item.Key,
+				LastModified: item.LastModified.String(),
+			}
+		}
 	}
-	defer f.Close()
 
-	if _, err := f.Write(dec); err != nil {
-		log.Fatalln(err)
-	}
-	if err := f.Sync(); err != nil {
-		log.Fatalln(err)
-	}
+	return file
 }

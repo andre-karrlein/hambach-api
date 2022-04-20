@@ -91,3 +91,17 @@ Resources:
           Properties:
             Path: "/api/v1/files"
             Method: "post"
+
+  fileDelete:
+    Type: "AWS::Serverless::Function"
+    Properties:
+      CodeUri: "cmd/fileDelete"
+      Environment:
+        Variables:
+          WRITE_KEY: !Ref WRITEKEY
+      Events:
+        Api:
+          Type: "Api"
+          Properties:
+            Path: "/api/v1/files/{id}"
+            Method: "delete"
