@@ -81,7 +81,7 @@ func saveFile(handler lambdaHandler, file model.UploadedFile) error {
 	uploader := s3manager.NewUploader(sess)
 
 	parseData(file)
-	fileData, err := os.Open(file.Name)
+	fileData, err := os.Open("/tmp/" + file.Name)
 	if err != nil {
 		log.Fatalf("Unable to open file %q, %v", file.Name, err)
 	}
@@ -105,7 +105,7 @@ func parseData(file model.UploadedFile) {
 		log.Fatalln(err)
 	}
 
-	f, err := os.Create(file.Name)
+	f, err := os.Create("/tmp/" + file.Name)
 	if err != nil {
 		log.Fatalln(err)
 	}
