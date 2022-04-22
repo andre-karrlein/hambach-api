@@ -80,7 +80,7 @@ func getAllFiles(handler lambdaHandler) []model.File {
 		files = append(files, model.File{
 			ID:           *item.ETag,
 			Key:          *item.Key,
-			LastModified: item.LastModified.String(),
+			LastModified: item.LastModified.Format("2006-01-02T15:04:05.000Z"),
 		})
 	}
 
