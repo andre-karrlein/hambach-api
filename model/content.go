@@ -10,6 +10,7 @@ type Content struct {
 	Image    string `json:"image"`
 	Creator  string `json:"creator"`
 	Content  string `json:"content"`
+	ContentMD string `json:"content_md"`
 	Active   string `json:"active"`
 	Link     string `json:"link"`
 }
