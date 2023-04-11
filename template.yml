@@ -36,6 +36,8 @@ Resources:
 
   content:
     Type: "AWS::Serverless::Function"
+    Metadata:
+      BuildMethod: makefile
     Properties:
       CodeUri: "cmd/content"
       Environment:
@@ -57,6 +59,8 @@ Resources:
 
   contentPut:
     Type: "AWS::Serverless::Function"
+    Metadata:
+      BuildMethod: makefile
     Properties:
       CodeUri: "cmd/contentPut"
       Environment:
@@ -71,6 +75,8 @@ Resources:
 
   files:
     Type: "AWS::Serverless::Function"
+    Metadata:
+      BuildMethod: makefile
     Properties:
       CodeUri: "cmd/files"
       Environment:
@@ -85,6 +91,8 @@ Resources:
       
   filePost:
     Type: "AWS::Serverless::Function"
+    Metadata:
+      BuildMethod: makefile
     Properties:
       CodeUri: "cmd/filePost"
       Environment:
@@ -99,6 +107,8 @@ Resources:
 
   fileDelete:
     Type: "AWS::Serverless::Function"
+    Metadata:
+      BuildMethod: makefile
     Properties:
       CodeUri: "cmd/fileDelete"
       Environment:
