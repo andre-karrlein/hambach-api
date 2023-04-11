@@ -39,7 +39,7 @@ Resources:
     Metadata:
       BuildMethod: makefile
     Properties:
-      CodeUri: "cmd/content"
+      CodeUri: .
       Environment:
         Variables:
           READ_KEY: !Ref READKEY
@@ -62,7 +62,7 @@ Resources:
     Metadata:
       BuildMethod: makefile
     Properties:
-      CodeUri: "cmd/contentPut"
+      CodeUri: .
       Environment:
         Variables:
           WRITE_KEY: !Ref WRITEKEY
@@ -78,7 +78,7 @@ Resources:
     Metadata:
       BuildMethod: makefile
     Properties:
-      CodeUri: "cmd/files"
+      CodeUri: .
       Environment:
         Variables:
           READ_KEY: !Ref READKEY
@@ -94,7 +94,7 @@ Resources:
     Metadata:
       BuildMethod: makefile
     Properties:
-      CodeUri: "cmd/filePost"
+      CodeUri: .
       Environment:
         Variables:
           WRITE_KEY: !Ref WRITEKEY
@@ -110,7 +110,7 @@ Resources:
     Metadata:
       BuildMethod: makefile
     Properties:
-      CodeUri: "cmd/fileDelete"
+      CodeUri: .
       Environment:
         Variables:
           WRITE_KEY: !Ref WRITEKEY
