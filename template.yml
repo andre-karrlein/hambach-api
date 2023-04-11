@@ -40,6 +40,8 @@ Resources:
       BuildMethod: makefile
     Properties:
       CodeUri: .
+      Handler: content
+      FunctionName: !Sub "content"
       Environment:
         Variables:
           READ_KEY: !Ref READKEY
@@ -63,6 +65,8 @@ Resources:
       BuildMethod: makefile
     Properties:
       CodeUri: .
+      Handler: contentPut
+      FunctionName: !Sub "contentPut"
       Environment:
         Variables:
           WRITE_KEY: !Ref WRITEKEY
@@ -79,6 +83,8 @@ Resources:
       BuildMethod: makefile
     Properties:
       CodeUri: .
+      Handler: files
+      FunctionName: !Sub "files"
       Environment:
         Variables:
           READ_KEY: !Ref READKEY
@@ -95,6 +101,8 @@ Resources:
       BuildMethod: makefile
     Properties:
       CodeUri: .
+      Handler: filePost
+      FunctionName: !Sub "filePost"
       Environment:
         Variables:
           WRITE_KEY: !Ref WRITEKEY
@@ -111,6 +119,8 @@ Resources:
       BuildMethod: makefile
     Properties:
       CodeUri: .
+      Handler: fileDelete
+      FunctionName: !Sub "fileDelete"
       Environment:
         Variables:
           WRITE_KEY: !Ref WRITEKEY
