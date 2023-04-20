@@ -67,10 +67,8 @@ Resources:
       Handler: article
       Environment:
         Variables:
-          READ_KEY: !Ref READKEY
+          WRITE_KEY: !Ref READKEY
       Events:
-        ApiEvent:
-          Type: "HttpApi"
         Api:
           Type: "Api"
           Properties:
@@ -81,7 +79,6 @@ Resources:
           Properties:
             Path: "/api/v1/article/{id}"
             Method: "get"
-
 
   contentPut:
     Type: "AWS::Serverless::Function"
