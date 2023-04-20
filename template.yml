@@ -67,7 +67,7 @@ Resources:
       Handler: article
       Environment:
         Variables:
-          WRITE_KEY: !Ref READKEY
+          READ_KEY: !Ref READKEY
       Events:
         Api:
           Type: "Api"
