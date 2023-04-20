@@ -2,6 +2,10 @@ build-content:
 	GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -o content cmd/content/main.go
 	mv content $(ARTIFACTS_DIR)
 
+build-article:
+	GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -o content cmd/article/main.go
+	mv article $(ARTIFACTS_DIR)
+
 build-contentPut:
 	GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -o contentPut cmd/contentPut/main.go
 	mv contentPut $(ARTIFACTS_DIR)

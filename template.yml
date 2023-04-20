@@ -41,7 +41,6 @@ Resources:
     Properties:
       CodeUri: .
       Handler: content
-      FunctionName: !Sub "content"
       Environment:
         Variables:
           READ_KEY: !Ref READKEY
@@ -59,6 +58,31 @@ Resources:
             Path: "/api/v1/content/{id}"
             Method: "get"
 
+  article:
+    Type: "AWS::Serverless::Function"
+    Metadata:
+      BuildMethod: makefile
+    Properties:
+      CodeUri: .
+      Handler: article
+      Environment:
+        Variables:
+          READ_KEY: !Ref READKEY
+      Events:
+        ApiEvent:
+          Type: "HttpApi"
+        Api:
+          Type: "Api"
+          Properties:
+            Path: "/api/v1/article"
+            Method: "get"
+        ApiParam:
+          Type: "Api"
+          Properties:
+            Path: "/api/v1/article/{id}"
+            Method: "get"
+
+
   contentPut:
     Type: "AWS::Serverless::Function"
     Metadata:
@@ -66,7 +90,6 @@ Resources:
     Properties:
       CodeUri: .
       Handler: contentPut
-      FunctionName: !Sub "contentPut"
       Environment:
         Variables:
           WRITE_KEY: !Ref WRITEKEY
@@ -84,7 +107,6 @@ Resources:
     Properties:
       CodeUri: .
       Handler: files
-      FunctionName: !Sub "files"
       Environment:
         Variables:
           READ_KEY: !Ref READKEY
@@ -102,7 +124,6 @@ Resources:
     Properties:
       CodeUri: .
       Handler: filePost
-      FunctionName: !Sub "filePost"
       Environment:
         Variables:
           WRITE_KEY: !Ref WRITEKEY
@@ -120,7 +141,6 @@ Resources:
     Properties:
       CodeUri: .
       Handler: fileDelete
-      FunctionName: !Sub "fileDelete"
       Environment:
         Variables:
           WRITE_KEY: !Ref WRITEKEY
