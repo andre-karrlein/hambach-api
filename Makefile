@@ -3,7 +3,7 @@ build-content:
 	mv content $(ARTIFACTS_DIR)
 
 build-article:
-	GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -o content cmd/article/main.go
+	GOOS=linux GOARCH=amd64 CGO_ENABLED=0 go build -o article cmd/article/main.go
 	mv article $(ARTIFACTS_DIR)
 
 build-contentPut:
