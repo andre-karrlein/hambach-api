@@ -2,15 +2,6 @@ AWSTemplateFormatVersion: "2010-09-09"
 Description: "hambach API."
 Transform: "AWS::Serverless-2016-10-31"
 
-
-Parameters:
-  VaultToken:
-    Type: "String"
-
-AWSTemplateFormatVersion: "2010-09-09"
-Description: "hambach API project."
-Transform: "AWS::Serverless-2016-10-31"
-
 Parameters:
   VaultToken:
     Type: "String"
@@ -21,10 +12,6 @@ Parameters:
     Type: "String"
 
 Globals:
-  Function:
-    Handler: "main"
-    Timeout: 10
-    Runtime: "go1.x"
   Api:
     Cors:
       AllowMethods: "'DELETE,GET,HEAD,OPTIONS,PATCH,POST,PUT'"
@@ -33,14 +20,18 @@ Globals:
 
 
 Resources:
-
   content:
     Type: "AWS::Serverless::Function"
     Metadata:
       BuildMethod: makefile
     Properties:
       CodeUri: .
-      Handler: content
+      Handler: bootstrap
+      FunctionName: !Sub "content"
+      Timeout: 10
+      Runtime: "provided.al2"
+      Architectures:
+        - x86_64
       Environment:
         Variables:
           READ_KEY: !Ref READKEY
@@ -64,7 +55,12 @@ Resources:
       BuildMethod: makefile
     Properties:
       CodeUri: .
-      Handler: article
+      Handler: bootstrap
+      FunctionName: !Sub "article"
+      Timeout: 10
+      Runtime: "provided.al2"
+      Architectures:
+        - x86_64
       Environment:
         Variables:
           READ_KEY: !Ref READKEY
@@ -86,7 +82,12 @@ Resources:
       BuildMethod: makefile
     Properties:
       CodeUri: .
-      Handler: contentPut
+      Handler: bootstrap
+      FunctionName: !Sub "contentPut"
+      Timeout: 10
+      Runtime: "provided.al2"
+      Architectures:
+        - x86_64
       Environment:
         Variables:
           WRITE_KEY: !Ref WRITEKEY
@@ -103,7 +104,12 @@ Resources:
       BuildMethod: makefile
     Properties:
       CodeUri: .
-      Handler: files
+      Handler: bootstrap
+      FunctionName: !Sub "files"
+      Timeout: 10
+      Runtime: "provided.al2"
+      Architectures:
+        - x86_64
       Environment:
         Variables:
           READ_KEY: !Ref READKEY
@@ -120,7 +126,12 @@ Resources:
       BuildMethod: makefile
     Properties:
       CodeUri: .
-      Handler: filePost
+      Handler: bootstrap
+      FunctionName: !Sub "filePost"
+      Timeout: 10
+      Runtime: "provided.al2"
+      Architectures:
+        - x86_64
       Environment:
         Variables:
           WRITE_KEY: !Ref WRITEKEY
@@ -137,7 +148,12 @@ Resources:
       BuildMethod: makefile
     Properties:
       CodeUri: .
-      Handler: fileDelete
+      Handler: bootstrap
+      FunctionName: !Sub "filesDelete"
+      Timeout: 10
+      Runtime: "provided.al2"
+      Architectures:
+        - x86_64
       Environment:
         Variables:
           WRITE_KEY: !Ref WRITEKEY
